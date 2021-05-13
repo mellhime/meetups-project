@@ -4,19 +4,9 @@
     <div class="container">
       <div class="meetup">
         <div class="meetup__content">
-          <secondary-button
-            tag="router-link"
-            :to="{ name: 'meetup-description', params: { meetupId } }"
-          >
-            Описание
-          </secondary-button>
-          <secondary-button
-            tag="router-link"
-            :to="{ name: 'meetup-agenda', params: { meetupId } }"
-          >
-            Программа
-          </secondary-button>
-          <router-view :meetup="meetup" />
+          <content-tabs :tabs="tabs">
+            <router-view :meetup="meetup" />
+          </content-tabs>
         </div>
         <div class="meetup__aside">
           <meetup-info
@@ -31,7 +21,7 @@
               block
               class="button"
               tag="router-link"
-              :to="{ name: 'meetup-edit', params: { meetup } }"
+              :to="{ name: 'meetup-edit', params: { meetupId } }"
             >
               Редактировать
             </secondary-button>
@@ -46,10 +36,11 @@
 <script>
 import MeetupCover from "../components/MeetupCover";
 import MeetupInfo from "../components/MeetupInfo";
-import { getMeetupCoverLink } from "@/data";
+import { fetchMeetup, getMeetupCoverLink } from "@/data";
 import SecondaryButton from "@/components/SecondaryButton";
 import PrimaryButton from "@/components/PrimaryButton";
 import DangerButton from "@/components/DangerButton";
+import ContentTabs from "@/components/ContentTabs";
 
 export default {
   name: "MeetupPage",
@@ -59,6 +50,7 @@ export default {
     SecondaryButton,
     PrimaryButton,
     DangerButton,
+    ContentTabs,
   },
 
   props: {
@@ -71,6 +63,10 @@ export default {
   data() {
     return {
       meetup: null,
+      tabs: [
+        { to: { name: "meetup-description" }, text: "Описание" },
+        { to: { name: "meetup-agenda" }, text: "Программа" },
+      ],
     };
   },
 
@@ -84,14 +80,7 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    fetch(`/api/meetups/${to.params.meetupId}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error();
-        } else {
-          return res.json();
-        }
-      })
+    fetchMeetup(to.params.meetupId)
       .then((meetup) => {
         next((vm) => {
           vm.setMeetup(meetup);
@@ -106,12 +95,10 @@ export default {
     if (to.params.meetupId === from.params.meetupId) {
       next();
     } else {
-      fetch(`/api/meetups/${to.params.meetupId}`)
-        .then((res) => res.json())
-        .then((meetup) => {
-          this.setMeetup(meetup);
-          next();
-        });
+      fetchMeetup(to.params.meetupId).then((meetup) => {
+        this.setMeetup(meetup);
+        next();
+      });
     }
   },
 

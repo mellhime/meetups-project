@@ -1,5 +1,5 @@
 <template>
-  <div class="meetup-agenda">
+  <div class="meetup-agenda" v-if="meetup">
     <meetup-agenda-item
       v-for="agendaItem in meetup.agenda"
       :agendaItem="agendaItem"

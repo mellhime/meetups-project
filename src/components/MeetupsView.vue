@@ -71,7 +71,7 @@ export default {
     },
     date: {
       type: String,
-      default: "",
+      default: "all",
     },
     participation: {
       type: String,

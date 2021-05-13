@@ -57,7 +57,7 @@ import AppInput from "@/components/AppInput";
 import DateInput from "@/components/DateInput";
 import SecondaryButton from "@/components/SecondaryButton";
 import PrimaryButton from "@/components/PrimaryButton";
-import _ from "lodash";
+import { cloneDeep } from "lodash/fp";
 
 let startId = 0;
 
@@ -99,7 +99,7 @@ export default {
 
   data() {
     return {
-      localMeetup: _.cloneDeep(this.meetup),
+      localMeetup: cloneDeep(this.meetup),
     };
   },
 
@@ -118,7 +118,7 @@ export default {
     },
 
     handleSubmit() {
-      this.$emit("submit", _.cloneDeep(this.localMeetup));
+      this.$emit("submit", cloneDeep(this.localMeetup));
     },
   },
 };

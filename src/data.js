@@ -24,7 +24,13 @@ export async function fetchMeetups() {
  * @return {Promise}
  */
 export async function fetchMeetup(id) {
-  return fetch(`${API_URL}/meetups/${id}`).then((res) => res.json());
+  return fetch(`${API_URL}/meetups/${id}`).then((res) => {
+    if (!res.ok) {
+      throw new Error();
+    } else {
+      return res.json();
+    }
+  });
 }
 
 /**

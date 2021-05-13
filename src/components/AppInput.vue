@@ -1,23 +1,25 @@
 <template>
   <div
     class="input-group"
-    :class="{ 'input-group_icon': hasIcon, 'input-group_icon-left': hasIcon }"
+    :class="{
+      'input-group_icon': hasLeftIcon || hasRightIcon,
+      'input-group_icon-left': hasLeftIcon,
+      'input-group_icon-right': hasRightIcon,
+    }"
   >
     <slot name="left-icon"></slot>
-    <textarea
-      v-if="multiline"
+    <component
       class="form-control"
-      :value="value"
-      v-bind="$attrs"
+      :class="{
+        'form-control_rounded': rounded,
+        'form-control_sm': small,
+      }"
+      :is="fieldType"
+      :value.prop="value"
       v-on="listeners"
-    ></textarea>
-    <input
-      v-else
-      class="form-control"
-      :value="value"
       v-bind="$attrs"
-      v-on="listeners"
-    />
+    ></component>
+    <slot name="right-icon"></slot>
   </div>
 </template>
 
@@ -28,22 +30,32 @@ export default {
   inheritAttrs: false,
 
   props: {
-    value: {},
-    multiline: Boolean,
+    small: {
+      type: Boolean,
+    },
+    rounded: {
+      type: Boolean,
+    },
+    multiline: {
+      type: Boolean,
+    },
+    value: {
+      type: [String, Number]
+    },
   },
 
-  data() {
-    return {
-      hasIcon: false,
-    };
-  },
+  computed: {
+    fieldType() {
+      return this.multiline ? "textarea" : "input";
+    },
 
-  mounted() {
-    this.updateHasIcon();
-  },
-
-  updated() {
-    this.updateHasIcon();
+    listeners() {
+      return {
+        ...this.$listeners,
+        input: ($event) => this.$emit("input", $event.target.value),
+        change: ($event) => this.$emit("change", $event.target.value),
+      };
+    },
   },
 
   model: {
@@ -51,18 +63,25 @@ export default {
     event: "input",
   },
 
-  computed: {
-    listeners() {
-      return {
-        ...this.$listeners,
-        input: ($event) => this.$emit("input", $event.target.value),
-      };
-    },
+  data() {
+    return {
+      hasLeftIcon: false,
+      hasRightIcon: false,
+    };
+  },
+
+  mounted() {
+    this.updateHasIcons();
+  },
+
+  updated() {
+    this.updateHasIcons();
   },
 
   methods: {
-    updateHasIcon() {
-      this.hasIcon = !!this.$slots["left-icon"];
+    updateHasIcons() {
+      this.hasLeftIcon = !!this.$slots["left-icon"];
+      this.hasRightIcon = !!this.$slots["right-icon"];
     },
   },
 };
