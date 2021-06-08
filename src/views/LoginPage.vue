@@ -30,11 +30,8 @@ import AuthLayout from "../components/AuthLayout";
 import PrimaryButton from "@/components/PrimaryButton";
 import SecondaryButton from "@/components/SecondaryButton";
 import AppInput from "@/components/AppInput";
-
-const errorTypes = {
-  invalidPassword: "Требуется ввести пароль",
-  invalidEmail: "Требуется ввести Email",
-};
+import { authApi } from "../api/authApi";
+import { errorTypes } from "../services/authService";
 
 export default {
   name: "LoginPage",
@@ -71,21 +68,21 @@ export default {
   methods: {
     submitForm() {
       if (this.errorMessage.length < 1) {
-        // this.loginUser();
+        this.loginUser();
       } else {
         alert(this.errorMessage);
       }
     },
 
-    // loginUser() {
-    //   login(this.user.email, this.user.password).then((data) => {
-    //     if (data.id !== undefined) {
-    //       alert(data.fullname);
-    //     } else {
-    //       alert(data.message);
-    //     }
-    //   });
-    // },
+    loginUser() {
+      authApi.login(this.user.email, this.user.password).then((data) => {
+        if (data.id !== undefined) {
+          alert(data.fullname);
+        } else {
+          alert(data.message);
+        }
+      });
+    },
   },
 };
 </script>

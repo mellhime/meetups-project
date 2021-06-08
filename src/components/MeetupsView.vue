@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { fetchMeetups } from "@/data";
+import { meetupsApi } from "../api/meetupsApi";
 import MeetupsList from "@/components/MeetupsList";
 import MeetupsCalendar from "@/components/MeetupsCalendar";
 import PageTabs from "@/components/PageTabs";
@@ -165,7 +165,7 @@ export default {
 
   methods: {
     async fetchMeetups() {
-      this.rawMeetups = await fetchMeetups();
+      this.rawMeetups = await meetupsApi.fetchMeetups();
     },
   },
 

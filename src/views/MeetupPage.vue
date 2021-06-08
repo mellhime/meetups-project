@@ -36,7 +36,8 @@
 <script>
 import MeetupCover from "../components/MeetupCover";
 import MeetupInfo from "../components/MeetupInfo";
-import { fetchMeetup, getMeetupCoverLink } from "@/data";
+import { meetupsApi } from "../api/meetupsApi";
+import { getMeetupCoverLink, formattedDate } from "../services/meetupService";
 import SecondaryButton from "@/components/SecondaryButton";
 import PrimaryButton from "@/components/PrimaryButton";
 import DangerButton from "@/components/DangerButton";
@@ -75,12 +76,13 @@ export default {
       return getMeetupCoverLink(this.meetup);
     },
     formattedDate() {
-      return new Date(this.meetup.date);
+      return formattedDate(this.meetup.date);
     },
   },
 
   beforeRouteEnter(to, from, next) {
-    fetchMeetup(to.params.meetupId)
+    meetupsApi
+      .fetchMeetup(to.params.meetupId)
       .then((meetup) => {
         next((vm) => {
           vm.setMeetup(meetup);
@@ -95,7 +97,7 @@ export default {
     if (to.params.meetupId === from.params.meetupId) {
       next();
     } else {
-      fetchMeetup(to.params.meetupId).then((meetup) => {
+      meetupsApi.fetchMeetup(to.params.meetupId).then((meetup) => {
         this.setMeetup(meetup);
         next();
       });

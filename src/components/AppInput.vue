@@ -40,7 +40,7 @@ export default {
       type: Boolean,
     },
     value: {
-      type: [String, Number]
+      type: [String, Number],
     },
   },
 

@@ -13,7 +13,7 @@
 <script>
 import FormLayout from "../components/FormLayout";
 import MeetupForm from "../components/MeetupForm";
-import { fetchMeetup } from "@/data";
+import { meetupsApi } from "../api/meetupsApi";
 export default {
   name: "MeetupEditFormPage",
   components: { MeetupForm, FormLayout },
@@ -32,7 +32,8 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    fetchMeetup(to.params.meetupId)
+    meetupsApi
+      .fetchMeetup(to.params.meetupId)
       .then((meetup) => {
         next((vm) => {
           vm.setMeetup(meetup);
@@ -47,7 +48,7 @@ export default {
     if (to.params.meetupId === from.params.meetupId) {
       next();
     } else {
-      fetchMeetup(to.params.meetupId).then((meetup) => {
+      meetupsApi.fetchMeetup(to.params.meetupId).then((meetup) => {
         this.setMeetup(meetup);
         next();
       });

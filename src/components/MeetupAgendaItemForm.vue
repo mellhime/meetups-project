@@ -56,7 +56,10 @@ import AppInput from "./AppInput";
 import DropdownButton from "./DropdownButton";
 import FormGroup from "./FormGroup";
 import AppIcon from "@/components/AppIcon";
-import { getAgendaItemsFieldSpecifications, getAgendaItemTypes } from "@/data";
+import {
+  getAgendaItemsFieldSpecifications,
+  getAgendaItemTypes,
+} from "../services/meetupService";
 
 export default {
   name: "MeetupAgendaItemForm",

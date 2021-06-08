@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import { agendaItemIcons, agendaItemTitles } from "@/data";
+import { agendaItemIcons, agendaItemTitles } from "../services/meetupService";
 import AppIcon from "@/components/AppIcon";
 
 export default {

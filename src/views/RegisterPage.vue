@@ -38,14 +38,8 @@ import FormGroup from "@/components/FormGroup";
 import PrimaryButton from "@/components/PrimaryButton";
 import SecondaryButton from "@/components/SecondaryButton";
 import AppInput from "@/components/AppInput";
-
-const errorTypes = {
-  invalidPassword: "Требуется ввести пароль",
-  invalidEmail: "Требуется ввести Email",
-  invalidFullName: "Требуется ввести полное имя",
-  invalidPasswordsComparison: "Пароли не совпадают",
-  invalidAgreement: "Требуется согласиться с условиями",
-};
+import { authApi } from "../api/authApi";
+import { errorTypes } from "../services/authService";
 
 export default {
   name: "RegisterPage",
@@ -91,23 +85,29 @@ export default {
   methods: {
     submitForm() {
       if (this.errorMessage.length < 1) {
-        // this.registerUser();
+        this.registerUser();
       } else {
         alert(this.errorMessage);
       }
     },
 
-    // registerUser() {
-    //   register(this.user.email, this.user.fullName, this.user.password).then(
-    //     (data) => {
-    //       if (data.id !== undefined) {
-    //         alert(data.id);
-    //       } else {
-    //         alert(data.message);
-    //       }
-    //     }
-    //   );
-    // },
+    registerUser() {
+      try {
+        authApi.register(this.user);
+        this.$toaster.success("Регистрация выполнена успешно");
+        this.$router.push({ name: "login" });
+      } catch (err) {
+        this.$toaster.error(err.message);
+        throw err;
+      }
+      // authApi.register(this.user).then((data) => {
+      //   if (data.id !== undefined) {
+      //     alert(data.id);
+      //   } else {
+      //     alert(data.message);
+      //   }
+      // });
+    },
   },
 };
 </script>
