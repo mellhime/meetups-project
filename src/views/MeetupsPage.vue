@@ -5,10 +5,13 @@
 </template>
 
 <script>
-import MeetupsView from "../components/MeetupsView";
+import MeetupsView from "../components/MeetupsPage/MeetupsView";
 
 export default {
   name: "MeetupsPage",
+  metaInfo: {
+    title: "Список митапов",
+  },
   components: { MeetupsView },
 
   data() {

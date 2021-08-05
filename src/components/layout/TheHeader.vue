@@ -5,7 +5,7 @@
         <router-link
           class="router-link-exact-active router-link-active"
           :to="{ name: 'meetups' }"
-          ><img src="../assets/logo.svg" alt="Meetups"
+          ><img src="../../assets/logo.svg" alt="Meetups"
         /></router-link>
       </h1>
     </div>

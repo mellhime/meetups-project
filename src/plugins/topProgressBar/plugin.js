@@ -1,4 +1,4 @@
-import TopProgressBar from "./index";
+import { TopProgressBar } from "./TopProgressBar";
 import TheTopProgressBar from "./TheTopProgressBar";
 
 export default {

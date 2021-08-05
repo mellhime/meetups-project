@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import TheHeader from "./TheHeader";
-import TheFooter from "./TheFooter";
+import TheHeader from "../layout/TheHeader";
+import TheFooter from "../layout/TheFooter";
 export default {
   name: "BaseLayout",
   components: { TheHeader, TheFooter },

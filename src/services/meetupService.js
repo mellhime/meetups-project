@@ -7,11 +7,15 @@ export const API_URL = process.env.VUE_APP_API_URL;
  * @return {string} - ссылка на изображение митапа
  */
 export function getMeetupCoverLink(meetup) {
-  return `${API_URL}/images/${meetup.imageId}`;
+  return meetup.imageId === null ? null : `${API_URL}/images/${meetup.imageId}`;
 }
 
 export function formattedDate(date) {
   return new Date(date);
+}
+
+export function byDate(a, b) {
+  return a.date.getTime() > b.date.getTime() ? -11 : 1;
 }
 
 /**

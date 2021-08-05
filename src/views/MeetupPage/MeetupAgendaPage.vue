@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import MeetupAgendaItem from "@/components/MeetupAgendaItem";
+import MeetupAgendaItem from "@/components/MeetupPage/MeetupAgendaItem";
 
 export default {
   name: "MeetupAgendaPage",

@@ -5,7 +5,7 @@
         <app-input v-model="user.email" type="email" />
       </form-group>
       <form-group label="Имя">
-        <app-input v-model="user.fullName" type="text" />
+        <app-input v-model="user.fullname" type="text" />
       </form-group>
       <form-group label="Пароль">
         <app-input v-model="user.password" type="password" />
@@ -33,16 +33,38 @@
 </template>
 
 <script>
-import AuthLayout from "../components/AuthLayout";
-import FormGroup from "@/components/FormGroup";
-import PrimaryButton from "@/components/PrimaryButton";
-import SecondaryButton from "@/components/SecondaryButton";
-import AppInput from "@/components/AppInput";
+import AuthLayout from "../components/layouts/AuthLayout";
+import FormGroup from "../components/ui/inputs/FormGroup";
+import PrimaryButton from "../components/ui/buttons/PrimaryButton";
+import SecondaryButton from "../components/ui/buttons/SecondaryButton";
+import AppInput from "../components/ui/inputs/AppInput";
 import { authApi } from "../api/authApi";
 import { errorTypes } from "../services/authService";
+import { TopProgressBar } from "../plugins/topProgressBar/TopProgressBar";
+
+export async function withProgress(promise) {
+  // Запускаем отображение загрузки
+  TopProgressBar.start();
+  // Возвращаем результата без изменений
+  return promise
+    .catch((err) => {
+      // Отображаем ошибку в прогресс баре
+      TopProgressBar.fail();
+      // Обработка исключения - не ответственность этой функции
+      // Пробрасываем дальше
+      throw err;
+    })
+    .finally(() => {
+      // Завершаем отображение загрузки
+      TopProgressBar.finish();
+    });
+}
 
 export default {
   name: "RegisterPage",
+  metaInfo: {
+    title: "Регистрация",
+  },
   components: {
     SecondaryButton,
     AuthLayout,
@@ -56,7 +78,7 @@ export default {
       user: {
         password: "",
         email: "",
-        fullName: "",
+        fullname: "",
         passwordConfirmation: "",
         agreement: false,
       },
@@ -68,7 +90,7 @@ export default {
     errorMessage() {
       if (!this.user.email) {
         return errorTypes["invalidEmail"];
-      } else if (!this.user.fullName) {
+      } else if (!this.user.fullname) {
         return errorTypes["invalidFullName"];
       } else if (!this.user.password) {
         return errorTypes["invalidPassword"];
@@ -87,26 +109,22 @@ export default {
       if (this.errorMessage.length < 1) {
         this.registerUser();
       } else {
-        alert(this.errorMessage);
+        this.$toaster.error(this.errorMessage);
       }
     },
 
-    registerUser() {
+    async registerUser() {
       try {
-        authApi.register(this.user);
+        const result = await withProgress(authApi.register(this.user));
         this.$toaster.success("Регистрация выполнена успешно");
-        this.$router.push({ name: "login" });
+        await this.$router.push({ name: "login" });
       } catch (err) {
-        this.$toaster.error(err.message);
-        throw err;
+        if (err.response.status >= 400 && err.response.status < 500) {
+          this.$toaster.error(err.message);
+        } else {
+          throw err;
+        }
       }
-      // authApi.register(this.user).then((data) => {
-      //   if (data.id !== undefined) {
-      //     alert(data.id);
-      //   } else {
-      //     alert(data.message);
-      //   }
-      // });
     },
   },
 };

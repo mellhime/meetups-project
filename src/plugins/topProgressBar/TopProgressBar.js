@@ -1,4 +1,4 @@
-export default {
+export const TopProgressBar = {
   instance: null,
 
   setInstance(instance) {

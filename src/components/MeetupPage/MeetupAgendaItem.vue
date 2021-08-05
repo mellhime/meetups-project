@@ -18,8 +18,8 @@
   </div>
 </template>
 <script>
-import { agendaItemIcons, agendaItemTitles } from "../services/meetupService";
-import AppIcon from "@/components/AppIcon";
+import { agendaItemIcons, agendaItemTitles } from "@/services/meetupService";
+import AppIcon from "@/components/ui/AppIcon";
 
 export default {
   name: "MeetupAgendaItem",

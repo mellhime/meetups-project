@@ -2,6 +2,6 @@ import { httpClient } from "@/api/http";
 
 export const imageApi = {
   uploadImage(file) {
-    return httpClient.put("/auth/user");
+    return httpClient.post("/images/upload", file);
   },
 };

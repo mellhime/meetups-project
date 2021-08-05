@@ -10,10 +10,14 @@
 </template>
 
 <script>
-import FormLayout from "../components/FormLayout";
-import MeetupForm from "../components/MeetupForm";
+import FormLayout from "../components/layouts/FormLayout";
+import MeetupForm from "../components/MeetupPage/MeetupForm";
+
 export default {
   name: "MeetupFormPage",
+  metaInfo: {
+    title: "Создание митапа",
+  },
   components: { MeetupForm, FormLayout },
 
   data() {

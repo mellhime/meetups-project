@@ -34,17 +34,22 @@
 </template>
 
 <script>
-import MeetupCover from "../components/MeetupCover";
-import MeetupInfo from "../components/MeetupInfo";
-import { meetupsApi } from "../api/meetupsApi";
-import { getMeetupCoverLink, formattedDate } from "../services/meetupService";
-import SecondaryButton from "@/components/SecondaryButton";
-import PrimaryButton from "@/components/PrimaryButton";
-import DangerButton from "@/components/DangerButton";
-import ContentTabs from "@/components/ContentTabs";
+import MeetupCover from "@/components/MeetupPage/MeetupCover";
+import MeetupInfo from "@/components/MeetupPage/MeetupInfo";
+import { meetupsApi } from "@/api/meetupsApi";
+import { getMeetupCoverLink, formattedDate } from "@/services/meetupService";
+import SecondaryButton from "@/components/ui/buttons/SecondaryButton";
+import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
+import DangerButton from "@/components/ui/buttons/DangerButton";
+import ContentTabs from "@/components/ui/ContentTabs";
 
 export default {
   name: "MeetupPage",
+  metaInfo() {
+    return {
+      title: this.meetup === null ? "Страница митапа" : this.meetup.title,
+    };
+  },
   components: {
     MeetupCover,
     MeetupInfo,
@@ -81,32 +86,32 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    meetupsApi
-      .fetchMeetup(to.params.meetupId)
-      .then((meetup) => {
-        next((vm) => {
-          vm.setMeetup(meetup);
-        });
-      })
-      .catch(() => {
-        next("/meetups");
-      });
+    next((vm) => {
+      vm.fetchMeetup(to.params.meetupId);
+    });
   },
 
   beforeRouteUpdate(to, from, next) {
     if (to.params.meetupId === from.params.meetupId) {
       next();
     } else {
-      meetupsApi.fetchMeetup(to.params.meetupId).then((meetup) => {
-        this.setMeetup(meetup);
-        next();
-      });
+      this.fetchMeetup(to.params.meetupId);
+      next();
     }
   },
 
   methods: {
-    setMeetup(meetup) {
-      this.meetup = meetup;
+    async fetchMeetup(meetupId) {
+      try {
+        const result = await meetupsApi.fetchMeetup(meetupId);
+        this.meetup = result.data;
+      } catch (err) {
+        if (err.response.status >= 400 && err.response.status < 500) {
+          this.$toaster.error(err.message);
+        } else {
+          throw err;
+        }
+      }
     },
   },
 };
