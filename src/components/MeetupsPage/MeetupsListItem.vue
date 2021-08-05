@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import AppIcon from "./AppIcon";
+import AppIcon from "../ui/AppIcon";
 
 export default {
   name: "MeetupsListItem",

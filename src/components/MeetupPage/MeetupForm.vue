@@ -52,11 +52,11 @@
 <script>
 import MeetupAgendaItemForm from "./MeetupAgendaItemForm.vue";
 import ImageUploader from "./ImageUploader";
-import FormGroup from "@/components/FormGroup";
-import AppInput from "@/components/AppInput";
-import DateInput from "@/components/DateInput";
-import SecondaryButton from "@/components/SecondaryButton";
-import PrimaryButton from "@/components/PrimaryButton";
+import FormGroup from "../ui/inputs/FormGroup";
+import AppInput from "../ui/inputs/AppInput";
+import DateInput from "../ui/inputs/DateInput";
+import SecondaryButton from "../ui/buttons/SecondaryButton";
+import PrimaryButton from "../ui/buttons/PrimaryButton";
 import { cloneDeep } from "lodash/fp";
 
 let startId = 0;

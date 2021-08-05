@@ -50,16 +50,17 @@
 </template>
 
 <script>
-import { fetchMeetups } from "@/data";
-import MeetupsList from "@/components/MeetupsList";
-import MeetupsCalendar from "@/components/MeetupsCalendar";
-import PageTabs from "@/components/PageTabs";
-import FormCheck from "@/components/FormCheck";
-import AppEmpty from "@/components/AppEmpty";
-import AppIcon from "@/components/AppIcon";
-import FormGroup from "@/components/FormGroup";
-import AppInput from "@/components/AppInput";
-import FadeTransition from "@/components/FadeTransition";
+import { meetupsApi } from "../../api/meetupsApi";
+import { byDate } from "../../services/meetupService";
+import MeetupsList from "./MeetupsList";
+import MeetupsCalendar from "./MeetupsCalendar";
+import PageTabs from "./PageTabs";
+import FormCheck from "../ui/inputs/FormCheck";
+import AppEmpty from "./AppEmpty";
+import AppIcon from "../ui/AppIcon";
+import FormGroup from "../ui/inputs/FormGroup";
+import AppInput from "../ui/inputs/AppInput";
+import FadeTransition from "../ui/transitions/FadeTransition";
 
 export default {
   name: "MeetupsView",
@@ -119,22 +120,24 @@ export default {
 
   computed: {
     meetups() {
-      return this.rawMeetups.map((meetup) => ({
-        ...meetup,
-        cover: meetup.imageId ? `/api/images/${meetup.imageId}` : undefined,
-        coverStyle: meetup.imageId
-          ? {
-              "--bg-url": `/api/images/${meetup.imageId}')`,
-            }
-          : {},
-        date: new Date(meetup.date),
-        localDate: new Date(meetup.date).toLocaleString(navigator.language, {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }),
-        dateOnlyString: new Date(meetup.date).toISOString().split("T"),
-      }));
+      return this.rawMeetups
+        .map((meetup) => ({
+          ...meetup,
+          cover: meetup.imageId ? `/api/images/${meetup.imageId}` : undefined,
+          coverStyle: meetup.imageId
+            ? {
+                "--bg-url": `/api/images/${meetup.imageId}')`,
+              }
+            : {},
+          date: new Date(meetup.date),
+          localDate: new Date(meetup.date).toLocaleString(navigator.language, {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          dateOnlyString: new Date(meetup.date).toISOString().split("T"),
+        }))
+        .sort(byDate);
     },
 
     filteredMeetups() {
@@ -165,7 +168,16 @@ export default {
 
   methods: {
     async fetchMeetups() {
-      this.rawMeetups = await fetchMeetups();
+      try {
+        const result = await meetupsApi.fetchMeetups();
+        this.rawMeetups = result.data;
+      } catch (err) {
+        if (err.response.status >= 400 && err.response.status < 500) {
+          this.$toaster.error(err.message);
+        } else {
+          throw err;
+        }
+      }
     },
   },
 

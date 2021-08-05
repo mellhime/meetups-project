@@ -15,7 +15,7 @@
   </ul>
 </template>
 <script>
-import AppIcon from "@/components/AppIcon";
+import AppIcon from "../ui/AppIcon";
 
 const getDateOnlyString = (date) => {
   const YYYY = date.getUTCFullYear();

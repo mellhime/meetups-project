@@ -3,12 +3,12 @@ import VueRouter from "vue-router";
 import LoginPage from "../views/LoginPage";
 import RegisterPage from "../views/RegisterPage";
 import MeetupsPage from "../views/MeetupsPage";
-import MeetupPage from "../views/MeetupPage";
-import MeetupDescriptionPage from "../views/MeetupDescriptionPage";
-import MeetupAgendaPage from "../views/MeetupAgendaPage";
+import MeetupPage from "../views/MeetupPage/MeetupPage";
+import MeetupDescriptionPage from "../views/MeetupPage/MeetupDescriptionPage";
+import MeetupAgendaPage from "../views/MeetupPage/MeetupAgendaPage";
 import MeetupFormPage from "../views/MeetupFormPage";
-import NotFoundPage from "@/views/NotFoundPage";
-import MeetupEditFormPage from "@/views/MeetupEditFormPage";
+import NotFoundPage from "../views/NotFoundPage";
+import MeetupEditFormPage from "../views/MeetupEditFormPage";
 
 Vue.use(VueRouter);
 
@@ -95,6 +95,8 @@ export const router = new VueRouter({
   mode: "history",
 
   base: process.env.BASE_URL,
+
+  scrollBehavior,
 
   routes,
 });

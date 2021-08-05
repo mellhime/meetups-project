@@ -25,19 +25,19 @@
 </template>
 
 <script>
-import FormGroup from "@/components/FormGroup";
-import AuthLayout from "../components/AuthLayout";
-import PrimaryButton from "@/components/PrimaryButton";
-import SecondaryButton from "@/components/SecondaryButton";
-import AppInput from "@/components/AppInput";
-
-const errorTypes = {
-  invalidPassword: "Требуется ввести пароль",
-  invalidEmail: "Требуется ввести Email",
-};
+import FormGroup from "../components/ui/inputs/FormGroup";
+import AuthLayout from "../components/layouts/AuthLayout";
+import PrimaryButton from "../components/ui/buttons/PrimaryButton";
+import SecondaryButton from "../components/ui/buttons/SecondaryButton";
+import AppInput from "../components/ui/inputs/AppInput";
+import { authApi } from "../api/authApi";
+import { errorTypes } from "../services/authService";
 
 export default {
   name: "LoginPage",
+  metaInfo: {
+    title: "Вход",
+  },
   components: {
     AuthLayout,
     FormGroup,
@@ -71,21 +71,21 @@ export default {
   methods: {
     submitForm() {
       if (this.errorMessage.length < 1) {
-        // this.loginUser();
+        this.loginUser();
       } else {
-        alert(this.errorMessage);
+        this.$toaster.error(this.errorMessage);
       }
     },
 
-    // loginUser() {
-    //   login(this.user.email, this.user.password).then((data) => {
-    //     if (data.id !== undefined) {
-    //       alert(data.fullname);
-    //     } else {
-    //       alert(data.message);
-    //     }
-    //   });
-    // },
+    loginUser() {
+      authApi.login(this.user.email, this.user.password).then((data) => {
+        if (data.id !== undefined) {
+          this.$toaster.success(data.fullname);
+        } else {
+          this.$toaster.error(data.message);
+        }
+      });
+    },
   },
 };
 </script>

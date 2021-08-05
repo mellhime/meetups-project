@@ -11,11 +11,15 @@
 </template>
 
 <script>
-import FormLayout from "../components/FormLayout";
-import MeetupForm from "../components/MeetupForm";
-import { fetchMeetup } from "@/data";
+import FormLayout from "../components/layouts/FormLayout";
+import MeetupForm from "../components/MeetupPage/MeetupForm";
+import { meetupsApi } from "../api/meetupsApi";
+
 export default {
   name: "MeetupEditFormPage",
+  metaInfo: {
+    title: "Редактирование митапа",
+  },
   components: { MeetupForm, FormLayout },
 
   props: {
@@ -32,31 +36,32 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    fetchMeetup(to.params.meetupId)
-      .then((meetup) => {
-        next((vm) => {
-          vm.setMeetup(meetup);
-        });
-      })
-      .catch(() => {
-        next("/meetups");
-      });
+    next((vm) => {
+      vm.fetchMeetup(to.params.meetupId);
+    });
   },
 
   beforeRouteUpdate(to, from, next) {
     if (to.params.meetupId === from.params.meetupId) {
       next();
     } else {
-      fetchMeetup(to.params.meetupId).then((meetup) => {
-        this.setMeetup(meetup);
-        next();
-      });
+      this.fetchMeetup(to.params.meetupId);
+      next();
     }
   },
 
   methods: {
-    setMeetup(meetup) {
-      this.meetup = meetup;
+    async fetchMeetup(meetupId) {
+      try {
+        const result = await meetupsApi.fetchMeetup(meetupId);
+        this.meetup = result.data;
+      } catch (err) {
+        if (err.response.status >= 400 && err.response.status < 500) {
+          this.$toaster.error(err.message);
+        } else {
+          throw err;
+        }
+      }
     },
 
     handleSubmit(meetup) {
